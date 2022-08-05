@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="referrer" content="no-referrer" />
+    <title>直角三角形边角计算</title>
+    <style>
+        table.default-table {
+            /* -moz-border-radius: 5px;
+	-webkit-border-radius:5px;
+	border-radius:5px; */
+            width: 100%;
+            border: solid #333;
+            border-width: 1px 0px 0px 1px;
+            font-size: #333;
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+
+        table.default-table tbody tr {
+            height: 20px;
+            line-height: 20px;
+        }
+
+        table.default-table tbody tr.odd {
+            background-color: #fff;
+        }
+
+        table.default-table tbody tr.even {
+            background-color: #F5F5F5;
+        }
+
+        table.default-table tbody tr:hover {
+            background-color: #eee;
+        }
+
+        table.default-table tbody tr th,
+        table.default-table tbody tr td {
+            padding: 3px 5px;
+            text-align: left;
+            /* border: 1px solid #ddd; */
+            border: solid #333;
+            border-width: 0px 1px 1px 0px;
+        }
+
+        table.default-table tbody tr th {
+            font-weight: bold;
+            text-align: center;
+        }
+
+        table.default-table tbody tr td.tac {
+            text-align: center;
+        }
+
+        table.default-table tbody tr td a:hover {
+            color: #0080c0;
+        }
+
+        input#c_angle {
+            background: gainsboro;
+        }
+
+        input#calculate_btn {
+            width: 92px;
+            height: 38px;
+            line-height: 38px;
+            border: 1px solid transparent;
+            padding: 0 18px;
+            background-color: #1E9FFF;
+            color: #fff;
+            white-space: nowrap;
+            text-align: center;
+            font-size: 14px;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        input#clear_btn {
+            width: 92px;
+            height: 38px;
+            line-height: 38px;
+            border: 1px solid transparent;
+            padding: 0 18px;
+            background-color: #FF5722;
+            color: #fff;
+            white-space: nowrap;
+            text-align: center;
+            font-size: 14px;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        input {
+            height: 38px;
+            line-height: 1.3;
+            border-width: 1px;
+            border-style: solid;
+            background-color: #fff;
+            color: rgba(0, 0, 0, .85);
+            border-radius: 2px;
+            font-size: 22px;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <h1>直角三角形 边长、角度计算工具</h1>
+        <p>说明：因为精度问题，算出的角度和长度会有一定的浮点偏差，如44.999999可以认为就是45。</p>
+        <svg width="327" height="278" xmlns="http://www.w3.org/2000/svg">
+            <g>
+                <title>直角三角形</title>
+                <line stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_1" y2="241.64704" x2="35.70585"
+                    y1="9.64704" x1="32.70585" stroke="#000" fill="none" />
+                <line stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_2" y2="241.64704" x2="36.70585"
+                    y1="242.64704" x1="299.70585" stroke="#000" fill="none" />
+                <line transform="rotate(-0.118927 166.372 126.147)" stroke="#000" stroke-linecap="undefined"
+                    stroke-linejoin="undefined" id="svg_3" y2="242.31266" x2="299.37535" y1="9.98058" x1="33.36961"
+                    fill="none" />
+                <rect stroke="#000" id="svg_4" height="6.33201" width="7.3318" y="235.18426" x="35.57987" fill="none" />
+                <text xml:space="preserve" text-anchor="start" font-family="Noto Sans JP" font-size="11"
+                    stroke-width="0" id="svg_5" y="229.51878" x="46.2443" stroke="#000" fill="#000000">90°</text>
+                <text xml:space="preserve" text-anchor="start" font-family="Noto Sans JP" font-size="24"
+                    stroke-width="0" id="svg_6" y="138.53785" x="12.25142" stroke="#000" fill="#000000">a</text>
+                <text xml:space="preserve" text-anchor="start" font-family="Noto Sans JP" font-size="24" id="svg_7"
+                    y="272.17651" x="142.55744" stroke-width="0" stroke="#000" fill="#000000">b</text>
+                <text xml:space="preserve" text-anchor="start" font-family="Noto Sans JP" font-size="24"
+                    stroke-width="0" id="svg_8" y="119.54184" x="173.21768" stroke="#000" fill="#000000">c</text>
+                <path
+                    d="m293.85905,236.18406c0,0 -0.25668,0.00891 -0.33325,0.33325c-0.1712,0.72528 -0.80515,0.92017 -1.33307,1.99957c-0.46301,0.94672 -0.33325,1.33307 -0.99979,1.9996l0,0.6665l0,0.66653l0,0.66653"
+                    id="svg_9" stroke-width="0" stroke="#000" fill="#000000" />
+                <path
+                    d="m32.91377,19.22953c0,-0.33327 0.29378,-0.26986 1.33305,0.33326c0.64453,0.37403 1.66631,0.66653 1.99957,0.66653c0.33327,0 0.66653,0 2.33284,-0.33326l0.33327,-0.33327l0.66653,-0.99979"
+                    id="svg_12" stroke-width="0" stroke="#000" fill="none" />
+                <path
+                    d="m32.91377,19.22953c0,0 0.66652,0 0.99979,0c0.33327,0 0.43086,0.09761 0.66652,0.33326c0.23566,0.23566 0.76985,0.22079 1.66632,-0.33326c0.40092,-0.24778 1.27454,-0.69915 1.66632,-1.33305c0.17522,-0.28349 -0.10245,-0.72851 0.33327,-1.33305c0.27557,-0.38234 0.33325,-0.99979 0.33325,-1.33305l0,-0.33327"
+                    id="svg_14" stroke-width="0" stroke="#000" fill="#000000" />
+                <text xml:space="preserve" text-anchor="start" font-family="Noto Sans JP" font-size="13" id="svg_15"
+                    y="42.22471" x="36.91292" stroke-width="0" stroke="#000" fill="#000000">∠b</text>
+                <text xml:space="preserve" text-anchor="start" font-family="Noto Sans JP" font-size="13" id="svg_16"
+                    y="237.5171" x="259.53292" stroke-width="0" stroke="#000" fill="#000000">∠a</text>
+            </g>
+
+        </svg>
+    </div>
+    <div>
+        <table>
+            <tr>
+                <td>
+                    <p>a的长度</p>
+                </td>
+                <td>
+                    <input id="a_len" type="text">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>b的长度</p>
+                </td>
+                <td>
+                    <input id="b_len" type="text">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>c的长度</p>
+                </td>
+                <td>
+                    <input id="c_len" type="text">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>a的角度</p>
+                </td>
+                <td>
+                    <input id="a_angle" type="text">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>b的角度</p>
+                </td>
+                <td>
+                    <input id="b_angle" type="text">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>c的角度</p>
+                </td>
+                <td>
+                    <input id="c_angle" type="text" value="90" readonly="readonly">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input id="calculate_btn" type="button" value="计算" onclick="calculate()">
+                </td>
+                <td>
+                    <input id="clear_btn" type="button" value="清空" onclick="clear_input()">
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script>
+        function calculate() {
+            // a b为直角边
+            var a_len = document.getElementById("a_len").value;
+            var b_len = document.getElementById("b_len").value;
+            var c_len = document.getElementById("c_len").value;
+
+            // 排除错误数据
+            if ((a_len.length > 0 && b_len.length == 0 && c_len.length == 0) ||
+                (a_len.length == 0 && b_len.length > 0 && c_len.length == 0) ||
+                (a_len.length == 0 && b_len.length == 0 && c_len.length > 0) ||
+                (a_len.length > 0 && b_len.length > 0 && c_len.length > 0)) {
+                console.log("数据有误，提供数据过多或过少，无法计算");
+                return;
+            }
+
+            // 浮点数筛查
+            if ((BASEisNotFloat(a_len) && a_len.length > 0) ||
+                (BASEisNotFloat(b_len) && b_len.length > 0) ||
+                (BASEisNotFloat(c_len) && c_len.length > 0)) {
+                console.log("数据有误，非浮点数，无法计算");
+                return;
+            }
+
+            var a_float = parseFloat(a_len);
+            var b_float = parseFloat(b_len);
+            var c_float = parseFloat(c_len);
+
+            if (b_float >= c_float || a_float >= c_float) {
+                console.log("数据有误，直角边大于等于斜边，无法计算");
+                return;
+            }
+
+            var a2 = Math.pow(a_float, 2);
+            var b2 = Math.pow(b_float, 2);
+            var c2 = Math.pow(c_float, 2);
+
+            // 没有数据的即是要求的边
+            if (a_len.length == 0) {
+                a_float = Math.sqrt(c2 - b2);
+                document.getElementById("a_len").value = a_float;
+            } else if (b_len.length == 0) {
+                b_float = Math.sqrt(c2 - a2);
+                document.getElementById("b_len").value = b_float;
+            } else if (c_len.length == 0) {
+                c_float = Math.sqrt(a2 + b2);
+                document.getElementById("c_len").value = c_float;
+            }
+
+            var a_angle_float = Math.asin(a_float / c_float) * 180 / Math.PI;
+            var b_angle_float = Math.asin(b_float / c_float) * 180 / Math.PI;
+
+            document.getElementById("a_angle").value = a_angle_float;
+            document.getElementById("b_angle").value = b_angle_float;
+
+            console.log("计算完毕");
+        }
+
+        // 判断是否为浮点数
+        function BASEisNotFloat(theFloat) {
+            len = theFloat.length;
+            dotNum = 0;
+            if (len == 0)
+                return true;
+            for (var i = 0; i < len; i++) {
+                oneNum = theFloat.substring(i, i + 1);
+                if (oneNum == ".")
+                    dotNum++;
+                if (((oneNum < "0" || oneNum > "9") && oneNum != ".") || dotNum > 1)
+                    return true;
+            }
+            if (len > 1 && theFloat.substring(0, 1) == "0") {
+                if (theFloat.substring(1, 2) != ".")
+                    return true;
+            }
+            return false;
+        }
+
+        function clear_input() {
+            console.log("清空数据");
+            document.getElementById("a_len").value = "";
+            document.getElementById("b_len").value = "";
+            document.getElementById("c_len").value = "";
+            document.getElementById("a_angle").value = "";
+            document.getElementById("b_angle").value = "";
+        }
+
+    </script>
+</body>
+
+</html>
