@@ -8,9 +8,6 @@
     <title>直角三角形边角计算</title>
     <style>
         table.default-table {
-            /* -moz-border-radius: 5px;
-	-webkit-border-radius:5px;
-	border-radius:5px; */
             width: 100%;
             border: solid #333;
             border-width: 1px 0px 0px 1px;
@@ -101,6 +98,10 @@
             color: rgba(0, 0, 0, .85);
             border-radius: 2px;
             font-size: 22px;
+        }
+
+        textarea {
+            width: 100%;
         }
     </style>
 </head>
@@ -205,6 +206,9 @@
             </tr>
         </table>
     </div>
+    <div>
+        <textarea id="log_area" rows="30" cols="50" readonly="readonly"></textarea>
+    </div>
 
     <script>
         function calculate() {
@@ -212,13 +216,20 @@
             var a_len = document.getElementById("a_len").value;
             var b_len = document.getElementById("b_len").value;
             var c_len = document.getElementById("c_len").value;
+            var a_angle = document.getElementById("a_angle").value;
+            var b_angle = document.getElementById("b_angle").value;
+            // var c_angle = document.getElementById("c_angle").value;
+
+            var temp1 = (a_angle.length > 0 ? 1 : 0) + (b_angle.length > 0 ? 1 : 0);
+            var temp2 = (a_len.length > 0 ? 1 : 0) + (b_len.length > 0 ? 1 : 0) + (c_len.length > 0 ? 1 : 0);
 
             // 排除错误数据
-            if ((a_len.length > 0 && b_len.length == 0 && c_len.length == 0) ||
-                (a_len.length == 0 && b_len.length > 0 && c_len.length == 0) ||
-                (a_len.length == 0 && b_len.length == 0 && c_len.length > 0) ||
+            if ((a_len.length > 0 && b_len.length == 0 && c_len.length == 0 && (temp1 == 2 || temp1 == 0)) ||
+                (a_len.length == 0 && b_len.length > 0 && c_len.length == 0 && (temp1 == 2 || temp1 == 0)) ||
+                (a_len.length == 0 && b_len.length == 0 && c_len.length > 0 && (temp1 == 2 || temp1 == 0)) ||
                 (a_len.length > 0 && b_len.length > 0 && c_len.length > 0)) {
                 console.log("数据有误，提供数据过多或过少，无法计算");
+                document.getElementById("log_area").prepend("数据有误，提供数据过多或过少，无法计算\n");
                 return;
             }
 
@@ -227,6 +238,22 @@
                 (BASEisNotFloat(b_len) && b_len.length > 0) ||
                 (BASEisNotFloat(c_len) && c_len.length > 0)) {
                 console.log("数据有误，非浮点数，无法计算");
+                document.getElementById("log_area").prepend("数据有误，非浮点数，无法计算\n");
+                return;
+            }
+
+            if ((BASEisNotFloat(a_angle) && a_len.length > 0) ||
+                (BASEisNotFloat(b_angle) && b_len.length > 0)) {
+                console.log("数据有误，非浮点数，无法计算");
+                document.getElementById("log_area").prepend("数据有误，非浮点数，无法计算\n");
+                return;
+            }
+
+            // 角度筛查
+            if ((parseFloat(a_angle) >= 90 && a_len.length > 0) ||
+                (parseFloat(a_angle) >= 90 && b_len.length > 0)) {
+                console.log("数据有误，角度超出范围，无法计算");
+                document.getElementById("log_area").prepend("数据有误，角度超出范围，无法计算\n");
                 return;
             }
 
@@ -236,6 +263,7 @@
 
             if (b_float >= c_float || a_float >= c_float) {
                 console.log("数据有误，直角边大于等于斜边，无法计算");
+                document.getElementById("log_area").prepend("数据有误，直角边大于等于斜边，无法计算\n");
                 return;
             }
 
@@ -243,25 +271,86 @@
             var b2 = Math.pow(b_float, 2);
             var c2 = Math.pow(c_float, 2);
 
-            // 没有数据的即是要求的边
-            if (a_len.length == 0) {
-                a_float = Math.sqrt(c2 - b2);
-                document.getElementById("a_len").value = a_float;
-            } else if (b_len.length == 0) {
-                b_float = Math.sqrt(c2 - a2);
-                document.getElementById("b_len").value = b_float;
-            } else if (c_len.length == 0) {
-                c_float = Math.sqrt(a2 + b2);
-                document.getElementById("c_len").value = c_float;
+            // 有2边，求1边和2角度
+            if(temp2 == 2) {
+                // 没有数据的即是要求的边
+                if (a_len.length == 0) {
+                    a_float = Math.sqrt(c2 - b2);
+                    document.getElementById("a_len").value = a_float;
+                } else if (b_len.length == 0) {
+                    b_float = Math.sqrt(c2 - a2);
+                    document.getElementById("b_len").value = b_float;
+                } else if (c_len.length == 0) {
+                    c_float = Math.sqrt(a2 + b2);
+                    document.getElementById("c_len").value = c_float;
+                }
+
+                var a_angle_float = Math.asin(a_float / c_float) * 180 / Math.PI;
+                var b_angle_float = Math.asin(b_float / c_float) * 180 / Math.PI;
+
+                document.getElementById("a_angle").value = a_angle_float;
+                document.getElementById("b_angle").value = b_angle_float;
+            }
+            // 有1边1角，求2边1角
+            else if(temp2 == 1 && temp1 == 1) {
+                var a_angle_float = parseFloat(document.getElementById("a_angle").value);
+                var b_angle_float = parseFloat(document.getElementById("b_angle").value);
+                // 根据不同边，选用不同公式
+                if(a_len.length > 0) {
+                    // 已知a边和a角时
+                    if(a_angle.length > 0) {
+                        document.getElementById("b_angle").value = 90 - a_angle_float;
+                        c_float = a_float / Math.sin(a_angle_float * Math.PI / 180);
+                        b_float = a_float / Math.tan(a_angle_float * Math.PI / 180);
+                        document.getElementById("c_len").value = c_float;
+                        document.getElementById("b_len").value = b_float;
+                    } else { // 已知a边和b角时
+                        document.getElementById("a_angle").value = 90 - b_angle_float;
+                        c_float = a_float / Math.cos(b_angle_float * Math.PI / 180);
+                        b_float = a_float * Math.tan(b_angle_float * Math.PI / 180);
+                        document.getElementById("c_len").value = c_float;
+                        document.getElementById("b_len").value = b_float;
+                    }
+                } else if(b_len.length > 0) {
+                    // 已知b边和a角时
+                    if(a_angle.length > 0) {
+                        document.getElementById("b_angle").value = 90 - a_angle_float;
+                        c_float = b_float / Math.cos(a_angle_float * Math.PI / 180);
+                        a_float = b_float * Math.tan(a_angle_float * Math.PI / 180);
+                        document.getElementById("c_len").value = c_float;
+                        document.getElementById("a_len").value = a_float;
+                    } else { // 已知b边和b角时
+                        document.getElementById("a_angle").value = 90 - b_angle_float;
+                        c_float = b_float / Math.sin(b_angle_float * Math.PI / 180);
+                        a_float = b_float / Math.tan(b_angle_float * Math.PI / 180);
+                        document.getElementById("c_len").value = c_float;
+                        document.getElementById("a_len").value = a_float;
+                    }
+                } else {
+                    // 已知c边和a角时
+                    if(a_angle.length > 0) {
+                        document.getElementById("b_angle").value = 90 - a_angle_float;
+                        a_float = c_float * Math.sin(a_angle_float * Math.PI / 180);
+                        b_float = c_float * Math.cos(a_angle_float * Math.PI / 180);
+                        document.getElementById("a_len").value = a_float;
+                        document.getElementById("b_len").value = b_float;
+                    } else { // 已知c边和b角时
+                        document.getElementById("a_angle").value = 90 - b_angle_float;
+                        a_float = c_float * Math.cos(b_angle_float * Math.PI / 180);
+                        b_float = c_float * Math.sin(b_angle_float * Math.PI / 180);
+                        document.getElementById("a_len").value = a_float;
+                        document.getElementById("b_len").value = b_float;
+                    }
+                }
+            }
+            // 其他情况一律认为不合规
+            else {
+                console.log("数据有误，不予计算");
+                document.getElementById("log_area").prepend("数据有误，不予计算\n");
             }
 
-            var a_angle_float = Math.asin(a_float / c_float) * 180 / Math.PI;
-            var b_angle_float = Math.asin(b_float / c_float) * 180 / Math.PI;
-
-            document.getElementById("a_angle").value = a_angle_float;
-            document.getElementById("b_angle").value = b_angle_float;
-
-            console.log("计算完毕");
+            console.log("运行完毕");
+            document.getElementById("log_area").prepend("运行完毕\n");
         }
 
         // 判断是否为浮点数
