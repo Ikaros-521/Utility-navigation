@@ -242,16 +242,16 @@
                 return;
             }
 
-            if ((BASEisNotFloat(a_angle) && a_len.length > 0) ||
-                (BASEisNotFloat(b_angle) && b_len.length > 0)) {
+            if ((BASEisNotFloat(a_angle) && a_angle.length > 0) ||
+                (BASEisNotFloat(b_angle) && b_angle.length > 0)) {
                 console.log("数据有误，非浮点数，无法计算");
                 document.getElementById("log_area").prepend("数据有误，非浮点数，无法计算\n");
                 return;
             }
 
             // 角度筛查
-            if ((parseFloat(a_angle) >= 90 && a_len.length > 0) ||
-                (parseFloat(a_angle) >= 90 && b_len.length > 0)) {
+            if ((parseFloat(a_angle) >= 90 && a_angle.length > 0) ||
+                (parseFloat(a_angle) >= 90 && a_angle.length > 0)) {
                 console.log("数据有误，角度超出范围，无法计算");
                 document.getElementById("log_area").prepend("数据有误，角度超出范围，无法计算\n");
                 return;
